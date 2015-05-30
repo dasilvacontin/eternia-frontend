@@ -31,6 +31,9 @@ util.getIncFromDirection = function (direction) {
 }
 
 util.getPositionFromId = function (id) {
+  if (!id) {
+    return
+  }
   var coords = id.split('x')
   var pos = {
     x: Number(coords[0]),
@@ -40,8 +43,9 @@ util.getPositionFromId = function (id) {
 }
 
 util.updateObjectWithProps = function (obj, props) {
-  for (var prop in props)
+  for (var prop in props) {
     obj[prop] = props[prop]
+  }
 }
 
 module.exports = util

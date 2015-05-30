@@ -41,7 +41,14 @@ Map.prototype.setPlayerCell = function (player, cell) {
 }
 
 Map.prototype.getPlayer = function (playerId) {
-  return this.players[playerId]
+  var player = this.players[playerId]
+  if (player) {
+    return player
+  }
+
+  player = new Player(playerId)
+  this.players[playerId] = player
+  return player
 }
 
 Map.prototype.playerMoveDirection = function (player, direction) {
