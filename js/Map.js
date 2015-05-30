@@ -31,8 +31,11 @@ Map.prototype.addPlayer = function (player) {
 }
 
 Map.prototype.setPlayerCell = function (player, cell) {
-  var oldCell = this.getCellAt(player.getCellId())
-  oldCell.setPlayerId(undefined)
+  var oldCellId = player.getCellId()
+  if (oldCellId) {
+    var oldCell = this.getCellWithId(oldCellId)
+    oldCell.setPlayerId(undefined)
+  }
   player.setCellId(cell.getId())
   cell.setPlayerId(player.getId())
 }
