@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.html",
   "scripts": {
-    "test": "standard && mocha"
+    "test": "standard js && mocha"
   },
   "repository": {
     "type": "git",
