@@ -1,4 +1,4 @@
-var zoom = 2
+var zoom = 1.3
 var renderer = PIXI.autoDetectRenderer(544*zoom, 544*zoom,{backgroundColor : 0x23be78})
 document.body.appendChild(renderer.view)
 

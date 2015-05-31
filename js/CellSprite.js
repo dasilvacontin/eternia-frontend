@@ -1,4 +1,5 @@
 var playerTexture = PIXI.Texture.fromImage('../img/player.png')
+var sleepyPlayerTexture = PIXI.Texture.fromImage('../img/player_zzz.png')
 var pineTexture = PIXI.Texture.fromImage('../img/Pine.png')
 var stoneTexture = PIXI.Texture.fromImage('../img/Rock.png')
 
@@ -18,7 +19,7 @@ function CellSprite() {
   this.textSprite.scale = {x: 0.3, y: 0.3}
   this.cellSprite.addChild(this.textSprite)
 
-  this.energySprite = new PIXI.Text("HP: 70/100\n")
+  this.energySprite = new PIXI.Text("HP: 70/100")
   this.energySprite.position.x = 0
   this.energySprite.position.y = 32
   this.energySprite.scale = {x: 0.3, y: 0.3}
@@ -28,22 +29,39 @@ function CellSprite() {
 CellSprite.prototype = new PIXI.Container()
 
 CellSprite.prototype.render = function(cell, player) {
+  var hp
+  var hpMax
   if (cell.playerId) {
-    this.cellSprite.texture = playerTexture
+
+    if (player.asleepSince) {
+      this.cellSprite.texture = sleepyPlayerTexture
+    } else {
+      this.cellSprite.texture = playerTexture
+    }
     this.cellSprite.alpha = 1
     this.textSprite.alpha = 1
+    this.textSprite.text = player.username
+    hp = player.hp
+    hpMax = player.maxHP
     if(myPlayer && myPlayer.getId() == cell.playerId)
       this.textSprite.style = {fill: 'white'}
     else
       this.textSprite.style = {fill: 'black'}
+
   } else if (cell.resource) {
-    if (cell.resource.type == "wood")
+
+    var resource = cell.resource
+    if (resource.type == "wood")
       this.cellSprite.texture = pineTexture
-    else if (cell.resource.type == "stone")
+    else if (resource.type == "stone")
       this.cellSprite.texture = stoneTexture
+    hp = resource.qty
+    hpMax = resource.maxQty
     this.cellSprite.alpha = 1
+    this.textSprite.alpha = 0
+
   } else {
     this.cellSprite.alpha = 0
   }
-
+  this.energySprite.text = "HP: " + hp + "/" + hpMax
 }
