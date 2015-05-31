@@ -21,6 +21,10 @@ socket.on('connect', function() {
     username = prompt("Yo, what's your username?")
   }
   socket.emit('hello', username, token)
+  socket.on('failedLogin', function () {
+    delete localStorage['token']
+    alert('Failed login. Refresh')
+  })
 })
 
 socket.on('whoami', function (playerId, token) {
