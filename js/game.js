@@ -1,8 +1,10 @@
-var renderer = PIXI.autoDetectRenderer(544, 544,{backgroundColor : 0x23be78})
+var zoom = 2
+var renderer = PIXI.autoDetectRenderer(544*zoom, 544*zoom,{backgroundColor : 0x23be78})
 document.body.appendChild(renderer.view)
 
 // create the root of the scene graph
 var stage = new PIXI.Container()
+stage.scale.x = stage.scale.y = zoom
 
 // create a texture from an image path
 var texture = PIXI.Texture.fromImage('../img/player.png')
@@ -15,12 +17,22 @@ var socket = io('http://localhost:8080')
 var myPlayer
 
 socket.on('connect', function() {
-  socket.emit('username', prompt("Yo, what's your username?"))
+  var token = localStorage['token']
+  var username
+  if (!token) {
+    username = prompt("Yo, what's your username?")
+  }
+  socket.emit('hello', username, token)
+  socket.on('failedLogin', function () {
+    delete localStorage['token']
+    alert('Failed login. Refresh')
+  })
 })
 
-socket.on('whoami', function (playerId) {
-  console.log('whoami', playerId)
+socket.on('whoami', function (playerId, token) {
+  console.log('whoami', playerId, token)
   myPlayer = map.getPlayer(playerId)
+  localStorage['token'] = token
 })
 
 socket.on('updates', function (updates) {
@@ -72,7 +84,6 @@ var keyboard = new KeyboardJS(debug)
 animate();
 
 function move (direction) {
-  console.log('move', direction)
   socket.emit('movePlayer', direction)
 }
 
