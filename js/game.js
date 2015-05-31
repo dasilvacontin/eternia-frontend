@@ -15,12 +15,18 @@ var socket = io('http://localhost:8080')
 var myPlayer
 
 socket.on('connect', function() {
-  socket.emit('username', prompt("Yo, what's your username?"))
+  var token = localStorage['token']
+  var username
+  if (!token) {
+    username = prompt("Yo, what's your username?")
+  }
+  socket.emit('hello', username, token)
 })
 
-socket.on('whoami', function (playerId) {
-  console.log('whoami', playerId)
+socket.on('whoami', function (playerId, token) {
+  console.log('whoami', playerId, token)
   myPlayer = map.getPlayer(playerId)
+  localStorage['token'] = token
 })
 
 socket.on('updates', function (updates) {
