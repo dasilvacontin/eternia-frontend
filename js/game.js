@@ -99,6 +99,7 @@ function attack (direction, building) {
 
 var HOUSE = 0
 var FENCE = 1
+var GATE = 2
 
 function animate() {
   requestAnimationFrame(animate)
@@ -122,6 +123,9 @@ function animate() {
   } else if (keyboard.char('H')) {
     console.log('HOUSE')
     building = HOUSE
+  } else if(keyboard.char('G')) {
+    console.log('GATE')
+    building = GATE
   }
 
   if (keyboard.char('I')) {
