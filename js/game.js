@@ -1,4 +1,4 @@
-var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0x23be78})
+var renderer = PIXI.autoDetectRenderer(544, 544,{backgroundColor : 0x23be78})
 document.body.appendChild(renderer.view)
 
 // create the root of the scene graph
@@ -13,6 +13,10 @@ var map = new Map
 var socket = io('http://localhost:8080')
 
 var myPlayer
+
+socket.on('connect', function() {
+  socket.emit('username', prompt("Yo, what's your username?"))
+})
 
 socket.on('whoami', function (playerId) {
   console.log('whoami', playerId)
@@ -40,46 +44,26 @@ socket.on('updates', function (updates) {
 var posX = 0
 var posY = 0
 var matrix = []
-var treeMatrix = []
 
-var DEPTH = 10
+var DEPTH = 8
 
 for (var i = 0; i < DEPTH*2+1; ++i) {
   var row = []
-  var treeRow = []
   posX = 0
   for (var j = 0; j < DEPTH*2+1; ++j) {
 
-    var soldier = new PIXI.Sprite(texture)
-    var tree = new PIXI.Sprite(treeTexture)
+    var cellSprite = new CellSprite
 
-    // center the sprite's anchor point
-    soldier.anchor.x = posX
-    soldier.anchor.y = posY
+    cellSprite.position.x = posX
+    cellSprite.position.y = posY
 
-    tree.anchor.x = posX
-    tree.anchor.y = posY
+    stage.addChild(cellSprite)
 
-    // move the sprite to the center of the screen
-    soldier.position.x = 0
-    soldier.position.y = 0
-
-    tree.position.x = 0
-    tree.position.y = 0
-
-    soldier.alpha = 0
-    tree.alpha = 0
-
-    stage.addChild(soldier)
-    stage.addChild(tree)
-
-    row.push(soldier)
-    treeRow.push(tree)
-    --posX
+    row.push(cellSprite)
+    posX += 32
   }
   matrix.push(row)
-  treeMatrix.push(treeRow)
-  --posY
+  posY += 32
 }
 
 var debug = false
@@ -115,9 +99,9 @@ function animate() {
   if (keyboard.char('I')) {
     attack(util.direction.UP)
   } else if (keyboard.char('L')) {
-    attack(util.direction.RIGHT) 
+    attack(util.direction.RIGHT)
   } else if (keyboard.char('K')) {
-    attack(util.direction.DOWN) 
+    attack(util.direction.DOWN)
   } else if (keyboard.char('J')) {
     attack(util.direction.LEFT)
   }
@@ -129,23 +113,16 @@ function animate() {
   var x = position.x
   var y = position.y
 
-  for(var i = y-DEPTH; i <= y+DEPTH; ++i) {
-    for(var j = x-DEPTH; j <= x+DEPTH; ++j) {
+  for (var i = y-DEPTH; i <= y+DEPTH; ++i) {
+    for (var j = x-DEPTH; j <= x+DEPTH; ++j) {
       var cell = map.getCellAt(j, i)
       var playerId = cell.getPlayerId()
-      var resource = cell.getResource()
       var sprite = matrix[-(y-DEPTH)+i][-(x-DEPTH)+j]
-      var treeSprite = treeMatrix[-(y-DEPTH)+i][-(x-DEPTH)+j]
-      if(playerId) {
-        sprite.alpha = 1
-        treeSprite.alpha = 0
-      } else if (resource) {
-        sprite.alpha = 0
-        treeSprite.alpha = 1
-      } else {
-        sprite.alpha = 0
-        treeSprite.alpha = 0
+      var player = undefined
+      if (playerId) {
+        player = map.getPlayer(playerId)
       }
+      sprite.render(cell, player)
     }
   }
 }
