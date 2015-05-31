@@ -119,6 +119,12 @@ function animate() {
 
   if (myPlayer == undefined) return
 
+  var status = ""
+  for (var type in myPlayer.resources) {
+    status += type + ': ' + myPlayer.resources[type] + ', '
+  }
+  domResources.textContent = status
+
   var position = myPlayer.getPositionObject()
   if (!position) return
   var x = position.x
