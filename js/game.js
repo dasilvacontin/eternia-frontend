@@ -1,8 +1,10 @@
-var renderer = PIXI.autoDetectRenderer(544, 544,{backgroundColor : 0x23be78})
+var zoom = 2
+var renderer = PIXI.autoDetectRenderer(544*zoom, 544*zoom,{backgroundColor : 0x23be78})
 document.body.appendChild(renderer.view)
 
 // create the root of the scene graph
 var stage = new PIXI.Container()
+stage.scale.x = stage.scale.y = zoom
 
 // create a texture from an image path
 var texture = PIXI.Texture.fromImage('../img/player.png')
@@ -82,7 +84,6 @@ var keyboard = new KeyboardJS(debug)
 animate();
 
 function move (direction) {
-  console.log('move', direction)
   socket.emit('movePlayer', direction)
 }
 
