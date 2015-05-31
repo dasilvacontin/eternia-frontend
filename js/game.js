@@ -12,7 +12,7 @@ var treeTexture = PIXI.Texture.fromImage('../img/tree.png')
 
 var map = new Map
 
-var socket = io('http://localhost:8080')
+var socket = io('http://kipos.me:8080')
 
 var myPlayer
 
