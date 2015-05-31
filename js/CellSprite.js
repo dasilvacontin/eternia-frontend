@@ -2,6 +2,7 @@ var playerTexture = PIXI.Texture.fromImage('../img/player.png')
 var sleepyPlayerTexture = PIXI.Texture.fromImage('../img/player_zzz.png')
 var pineTexture = PIXI.Texture.fromImage('../img/Pine.png')
 var stoneTexture = PIXI.Texture.fromImage('../img/Rock.png')
+var fenceTexture = PIXI.Texture.fromImage('../img/Fence.png')
 
 function CellSprite() {
   PIXI.Container.call(this)
@@ -55,6 +56,8 @@ CellSprite.prototype.render = function(cell, player) {
       this.cellSprite.texture = pineTexture
     else if (resource.type == "stone")
       this.cellSprite.texture = stoneTexture
+    else if (resource.type == "fence")
+      this.cellSprite.texture = fenceTexture
     hp = resource.qty
     hpMax = resource.maxQty
     this.cellSprite.alpha = 1
