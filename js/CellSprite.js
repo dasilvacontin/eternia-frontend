@@ -3,6 +3,7 @@ var sleepyPlayerTexture = PIXI.Texture.fromImage('../img/player_zzz.png')
 var pineTexture = PIXI.Texture.fromImage('../img/Pine.png')
 var stoneTexture = PIXI.Texture.fromImage('../img/Rock.png')
 var fenceTexture = PIXI.Texture.fromImage('../img/Fence.png')
+var houseTexture = PIXI.Texture.fromImage('../img/Casa.png')
 
 function CellSprite() {
   PIXI.Container.call(this)
@@ -32,7 +33,23 @@ CellSprite.prototype = new PIXI.Container()
 CellSprite.prototype.render = function(cell, player) {
   var hp
   var hpMax
-  if (cell.playerId) {
+  if (cell.resource) {
+
+    var resource = cell.resource
+    if (resource.type == "wood")
+      this.cellSprite.texture = pineTexture
+    else if (resource.type == "stone")
+      this.cellSprite.texture = stoneTexture
+    else if (resource.type == "fence")
+      this.cellSprite.texture = fenceTexture
+    else if (resource.type == "house")
+      this.cellSprite.texture = houseTexture
+    hp = resource.qty
+    hpMax = resource.maxQty
+    this.cellSprite.alpha = 1
+    this.textSprite.alpha = 0
+
+  } else if (cell.playerId) {
 
     if (player.asleepSince) {
       this.cellSprite.texture = sleepyPlayerTexture
@@ -48,20 +65,6 @@ CellSprite.prototype.render = function(cell, player) {
       this.textSprite.style = {fill: 'white'}
     else
       this.textSprite.style = {fill: 'black'}
-
-  } else if (cell.resource) {
-
-    var resource = cell.resource
-    if (resource.type == "wood")
-      this.cellSprite.texture = pineTexture
-    else if (resource.type == "stone")
-      this.cellSprite.texture = stoneTexture
-    else if (resource.type == "fence")
-      this.cellSprite.texture = fenceTexture
-    hp = resource.qty
-    hpMax = resource.maxQty
-    this.cellSprite.alpha = 1
-    this.textSprite.alpha = 0
 
   } else {
     this.cellSprite.alpha = 0

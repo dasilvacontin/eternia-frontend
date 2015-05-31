@@ -87,10 +87,18 @@ function move (direction) {
   socket.emit('movePlayer', direction)
 }
 
-function attack (direction) {
-  console.log('attack', direction)
-  socket.emit('attackPlayer', direction)
+function attack (direction, building) {
+  if (building === undefined) {
+    console.log('attack', direction)
+    socket.emit('attackPlayer', direction)
+  } else {
+    console.log('build', building, direction)
+    socket.emit('build', building, direction)
+  }
 }
+
+var HOUSE = 0
+var FENCE = 1
 
 function animate() {
   requestAnimationFrame(animate)
@@ -107,14 +115,23 @@ function animate() {
     move(util.direction.LEFT)
   }
 
+  var building = undefined
+  if (keyboard.char('F')) {
+    console.log('FENCE')
+    building = FENCE
+  } else if (keyboard.char('H')) {
+    console.log('HOUSE')
+    building = HOUSE
+  }
+
   if (keyboard.char('I')) {
-    attack(util.direction.UP)
+    attack(util.direction.UP, building)
   } else if (keyboard.char('L')) {
-    attack(util.direction.RIGHT)
+    attack(util.direction.RIGHT, building)
   } else if (keyboard.char('K')) {
-    attack(util.direction.DOWN)
+    attack(util.direction.DOWN, building)
   } else if (keyboard.char('J')) {
-    attack(util.direction.LEFT)
+    attack(util.direction.LEFT, building)
   }
 
   if (myPlayer == undefined) return
